@@ -108,3 +108,89 @@ const db = mongoose.connection;
 AND add more details and connect further
 
 ![79](https://github.com/Dn670/hackathon/assets/151924437/807b4df1-4337-4df2-85f0-e2627c308bda)
+
+here we are adding our basic code of backend which would further add more features
+
+const express = require('express');
+const mongoose = require('mongoose');
+
+
+const app = express();
+
+
+mongoose.connect('mongodb://localhost:27017/tourismDB', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+
+const destinationSchema = new mongoose.Schema({
+    name: String,
+    description: String,
+    location: String,
+    attractions: [String],
+    photoUrl: String,
+    nearestTrainStation: String,
+    nearestBusStation: String
+});
+
+const trainStationSchema = new mongoose.Schema({
+    name: String,
+    location: String,
+    timings: [String],
+    tickets: String
+});
+
+const busStationSchema = new mongoose.Schema({
+    name: String,
+    location: String,
+    timings: [String]
+});
+
+
+const Destination = mongoose.model('Destination', destinationSchema);
+const TrainStation = mongoose.model('TrainStation', trainStationSchema);
+const BusStation = mongoose.model('BusStation', busStationSchema);
+
+app.use(express.json());
+
+app.get('/destination/:name', async (req, res) => {
+    try {
+        const destination = await Destination.findOne({ name: req.params.name });
+        if (!destination) {
+            return res.status(404).json({ message: 'Destination not found' });
+        }
+        res.json(destination);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
+app.get('/train-station/:name', async (req, res) => {
+    try {
+        const trainStation = await TrainStation.findOne({ name: req.params.name });
+        if (!trainStation) {
+            return res.status(404).json({ message: 'Train station not found' });
+        }
+        res.json(trainStation);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
+app.get('/bus-station/:name', async (req, res) => {
+    try {
+        const busStation = await BusStation.findOne({ name: req.params.name });
+        if (!busStation) {
+            return res.status(404).json({ message: 'Bus station not found' });
+        }
+        res.json(busStation);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+});
