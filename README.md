@@ -106,3 +106,5 @@ const db = mongoose.connection;
 
 // Define schemas for tourism destinations and train/bus stations
 AND add more details and connect further
+
+![79](https://github.com/Dn670/hackathon/assets/151924437/807b4df1-4337-4df2-85f0-e2627c308bda)
